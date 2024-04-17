@@ -1,0 +1,41 @@
+pkgname=netifd
+pkgver=r1377.33ec3da
+pkgrel=1
+pkgdesc="OpenWrt Network interface configuration daemon"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('libnl')
+makedepends=('cmake')
+
+source=(
+    'git+https://git.openwrt.org/project/netifd.git'
+    'remove-debug.patch'
+)
+sha256sums=("SKIP" "SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    mkdir -p build
+    cd netifd
+    patch -N -i $srcdir/remove-debug.patch
+    ./make_ethtool_modes_h.sh cc > ./ethtool-modes.h
+    cp ./ethtool-modes.h ../build/
+    cd ..
+
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_C_COMPILER=gcc \
+        -DCMAKE_INCLUDE_PATH=/usr/include/libnl-tiny \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    mv $pkgdir/usr/sbin $pkgdir/usr/bin
+}

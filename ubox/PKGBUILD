@@ -1,0 +1,35 @@
+pkgname=ubox
+pkgver=r214.d413903
+pkgrel=1
+pkgdesc="OpenWrt system helper toolbox"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('libubox' 'udebug')
+makedepends=('cmake')
+
+source=(
+    'git+https://github.com/openwrt/ubox.git'
+    'logd.service'
+)
+sha256sums=("SKIP" "SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    cp -r $pkgdir/usr/sbin/* $pkgdir/usr/bin
+    rm -r $pkgdir/usr/sbin
+
+    install -Dm644 logd.service "$pkgdir"/usr/lib/systemd/system/logd.service
+}

@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenWrt micro bus socket
+
+[Socket]
+ListenStream=/run/ubus/ubus.sock
+
+[Install]
+WantedBy=sockets.target

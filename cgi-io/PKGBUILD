@@ -1,0 +1,33 @@
+pkgname=cgi-io
+pkgver=r38.901b0f0
+pkgrel=1
+pkgdesc="CGI utility for handling up/downloading of files etc."
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+
+source=('git+https://git.openwrt.org/project/cgi-io.git')
+sha256sums=("SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    mkdir -p $pkgdir/usr/libexec
+    cp build/cgi-io $pkgdir/usr/libexec
+
+    mkdir -p $pkgdir/srv/http/cgi-bin
+    ln -s $pkgdir/usr/libexec/cgi-io $pkgdir/srv/http/cgi-bin/cgi-upload
+    ln -s $pkgdir/usr/libexec/cgi-io $pkgdir/srv/http/cgi-bin/cgi-download
+    ln -s $pkgdir/usr/libexec/cgi-io $pkgdir/srv/http/cgi-bin/cgi-backup
+    ln -s $pkgdir/usr/libexec/cgi-io $pkgdir/srv/http/cgi-bin/cgi-exec
+}

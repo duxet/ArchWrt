@@ -1,0 +1,28 @@
+pkgname=libubox
+pkgrel=1
+pkgdesc="Utility for the Unified Configuration Interface (UCI)"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('lua51')
+makedepends=('cmake')
+
+source=('git+https://git.openwrt.org/project/libubox.git')
+sha256sums=("SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DLUAPATH="/usr/lib/lua/5.1" \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}

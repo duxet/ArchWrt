@@ -1,0 +1,19 @@
+diff --git a/libs/rpcd-mod-luci/src/CMakeLists.txt b/libs/rpcd-mod-luci/src/CMakeLists.txt
+index 91569b92f7..ec8367a6e0 100644
+--- a/libs/rpcd-mod-luci/src/CMakeLists.txt
++++ b/libs/rpcd-mod-luci/src/CMakeLists.txt
+@@ -12,8 +12,12 @@ IF(APPLE)
+ ENDIF()
+ 
+ IF (NOT DEFINED LIBNL_LIBS)
+-  FIND_LIBRARY(libnl NAMES libnl-3 libnl nl-3 nl)
+-  SET(LIBNL_LIBS ${libnl})
++	include(FindPkgConfig)
++	pkg_search_module(LIBNL libnl-3.0 libnl-3 libnl nl-3 nl)
++	IF (LIBNL_FOUND)
++		include_directories(${LIBNL_INCLUDE_DIRS})
++		SET(LIBNL_LIBS ${LIBNL_LIBRARIES})
++	ENDIF()
+ ENDIF()
+ 
+ ADD_LIBRARY(rpcd-mod-luci MODULE luci.c)

@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenWrt ubox log daemon
+
+[Service]
+ExecStart=/usr/bin/logd -S 64
+
+[Install]
+WantedBy=basic.target

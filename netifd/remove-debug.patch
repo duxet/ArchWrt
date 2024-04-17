@@ -1,0 +1,29 @@
+diff --git a/system-linux.c b/system-linux.c
+index 4463a2a..72ac70d 100644
+--- a/system-linux.c
++++ b/system-linux.c
+@@ -197,14 +197,6 @@ abort:
+ 	return;
+ }
+ 
+-static void
+-nl_udebug_cb(void *priv, struct nl_msg *msg)
+-{
+-	struct nlmsghdr *nlh = nlmsg_hdr(msg);
+-
+-	udebug_netlink_msg(priv, nlmsg_get_proto(msg), nlh, nlh->nlmsg_len);
+-}
+-
+ static struct nl_sock *
+ create_socket(int protocol, int groups)
+ {
+@@ -222,9 +214,6 @@ create_socket(int protocol, int groups)
+ 		return NULL;
+ 	}
+ 
+-	nl_socket_set_tx_debug_cb(sock, nl_udebug_cb, &udb_nl);
+-	nl_socket_set_rx_debug_cb(sock, nl_udebug_cb, &udb_nl);
+-
+ 	return sock;
+ }
+ 

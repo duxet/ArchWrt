@@ -1,0 +1,33 @@
+pkgname=iwinfo
+pkgver=r212.79a9615
+pkgrel=1
+pkgdesc="Library for accessing wireless device drivers"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+
+source=('git+https://git.openwrt.org/project/iwinfo.git')
+sha256sums=("SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cd iwinfo
+    # TODO: Add backends and CLI tool
+    #BACKENDS="nl80211"
+    CFLAGS="-fPIC -I/usr/include/lua5.1 -I/usr/include/libnl3" make libiwinfo.so iwinfo.so
+}
+
+package() {
+    cd iwinfo
+    mkdir -p $pkgdir/usr/include
+    cp -r include/* $pkgdir/usr/include
+
+    mkdir -p $pkgdir/usr/lib
+    cp libiwinfo.so $pkgdir/usr/lib/libiwinfo.so
+
+    mkdir -p $pkgdir/usr/lib/lua
+    cp iwinfo.so $pkgdir/usr/lib/lua/iwinfo.so
+}

@@ -1,0 +1,38 @@
+pkgname=rpcd
+pkgver=r231.8ef4c25
+pkgrel=1
+pkgdesc="OpenWrt rpc"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('ubox' 'ubus' 'uci' 'json-c' 'libxcrypt')
+makedepends=('cmake')
+
+source=(
+    'git+https://github.com/openwrt/rpcd.git'
+    'rpcd.service'
+)
+sha256sums=("SKIP" "SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DIWINFO_SUPPORT=false \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    mv $pkgdir/usr/sbin $pkgdir/usr/bin
+
+    mkdir -p $pkgdir/usr/include
+    cp -r rpcd/include/* $pkgdir/usr/include
+
+    install -Dm644 rpcd.service "$pkgdir"/usr/lib/systemd/system/rpcd.service
+}

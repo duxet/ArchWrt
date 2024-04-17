@@ -1,0 +1,30 @@
+pkgname=procd
+pkgver=r773.946552a
+pkgrel=1
+pkgdesc="OpenWrt service / process manager"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('ubox' 'ubus' 'uci' 'udebug' 'json-c')
+makedepends=('cmake')
+
+source=('git+https://github.com/openwrt/procd.git')
+sha256sums=("SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    mv $pkgdir/usr/sbin $pkgdir/usr/bin
+    rm $pkgdir/usr/bin/init
+}

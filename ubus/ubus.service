@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenWrt micro bus
+Requires=ubus.socket
+
+[Service]
+ExecStart=/usr/bin/ubusd

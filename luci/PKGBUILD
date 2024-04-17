@@ -1,0 +1,93 @@
+pkgname=luci
+pkgver=r17197.f630156
+pkgrel=1
+pkgdesc="LUCI"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('iwinfo' 'libnl' 'libxcrypt' 'lua51' 'rpcd')
+makedepends=('cmake')
+
+source=(
+    'git+https://git.openwrt.org/project/luci.git'
+    'git+https://github.com/jow-/lucihttp.git'
+    'fix-rpcd-mod-luci-build.patch'
+)
+sha256sums=("SKIP" "SKIP" "SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B lucihttp-build -S "lucihttp" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DBUILD_TESTS=false \
+        -Wno-dev
+    cmake --build lucihttp-build
+
+    cd luci
+    patch -Np1  -i $srcdir/fix-rpcd-mod-luci-build.patch
+    cd ..
+
+    cmake -B rpcd-mod-luci-build -S "luci/libs/rpcd-mod-luci/src" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DBUILD_TESTS=false \
+        -Wno-dev
+    cmake --build rpcd-mod-luci-build
+
+    cd $srcdir/luci/contrib/package/ucode-mod-html
+    gcc -Wall -ffunction-sections -Wl,--gc-sections -shared -o html.so src/html.c
+
+    cd $srcdir/luci/modules/luci-base/src
+    make version.uc lib/luci.o lib/lmo.o lib/plural_formula.o
+    gcc -shared -o core.so lib/luci.o lib/lmo.o lib/plural_formula.o -lcrypt
+
+    cd $srcdir/luci/modules/luci-lua-runtime/src
+    CPPFLAGS="-I/usr/include/lua5.1" make compile
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install lucihttp-build
+    DESTDIR="$pkgdir" cmake --install rpcd-mod-luci-build
+
+    cd luci
+
+    cd modules/luci-base/src
+    DESTDIR="$pkgdir" make install
+    cd ../../..
+
+    cd modules/luci-lua-runtime/src
+    DESTDIR="$pkgdir" make install
+    cd ../../..
+
+    cp contrib/package/ucode-mod-html/html.so $pkgdir/usr/lib/ucode
+
+    mkdir -p $pkgdir/usr/lib/lua/luci
+    cp -r libs/luci-lib-base/luasrc/* $pkgdir/usr/lib/lua/luci
+
+    mkdir -p $pkgdir/srv/http
+    cp -r modules/luci-base/htdocs/* $pkgdir/srv/http
+    cp -r modules/luci-base/root/usr/share/* $pkgdir/usr/share
+    cp -r modules/luci-base/ucode/* $pkgdir/usr/share/ucode/luci
+
+    cp -r modules/luci-compat/luasrc/* $pkgdir/usr/lib/lua/luci
+    cp -r modules/luci-compat/root/usr/share/* $pkgdir/usr/share
+
+    cp -r modules/luci-lua-runtime/luasrc/* $pkgdir/usr/lib/lua/luci
+
+    cp -r modules/luci-mod-network/htdocs/* $pkgdir/srv/http
+    cp -r modules/luci-mod-network/root/usr/share/* $pkgdir/usr/share
+
+    cp -r modules/luci-mod-status/htdocs/* $pkgdir/srv/http
+    cp -r modules/luci-mod-status/root/usr/share/* $pkgdir/usr/share
+    cp -r modules/luci-mod-status/ucode/* $pkgdir/usr/share/ucode/luci
+
+    cp -r modules/luci-mod-system/htdocs/* $pkgdir/srv/http
+    cp -r modules/luci-mod-system/root/usr/share/* $pkgdir/usr/share
+
+    cp -r themes/luci-theme-bootstrap/htdocs/* $pkgdir/srv/http
+    cp -r themes/luci-theme-bootstrap/ucode/* $pkgdir/usr/share/ucode/luci
+}

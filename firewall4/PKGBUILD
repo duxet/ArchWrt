@@ -1,0 +1,22 @@
+pkgname=firewall4
+pkgver=r153.698a533
+pkgrel=1
+pkgdesc="OpenWrt nftables firewall"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+
+source=('git+https://git.openwrt.org/project/firewall4.git')
+sha256sums=("SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+package() {
+    cd $pkgname
+    mkdir -p root/usr/bin
+    mv root/sbin/* root/usr/bin
+    rm -r root/sbin
+    cp -r root/* $pkgdir
+}

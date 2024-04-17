@@ -1,0 +1,38 @@
+pkgname=ubus
+pkgver=r345.65bb027
+pkgrel=1
+pkgdesc="OpenWrt RPC client utility"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://openwrt.org"
+depends=('json-c')
+makedepends=('cmake')
+
+source=(
+    'git+https://github.com/openwrt/ubus.git'
+    'ubus.service'
+    'ubus.socket'
+)
+sha256sums=("SKIP" "SKIP" "SKIP")
+
+pkgver() {
+  cd "$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DLUAPATH="/usr/lib/lua/5.1" \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    cp -r $pkgdir/usr/sbin/* $pkgdir/usr/bin
+    rm -r $pkgdir/usr/sbin
+
+    install -Dm644 ubus.service "$pkgdir"/usr/lib/systemd/system/ubus.service
+    install -Dm644 ubus.socket "$pkgdir"/usr/lib/systemd/system/ubus.socket
+}
