@@ -2,7 +2,7 @@
 Description=OpenWrt network interface management daemon
 
 [Service]
-ExecStart=/usr/bin/netifd
+ExecStart=/usr/bin/netifd -p /usr/share/netifd
 
 [Install]
 WantedBy=multi-user.target
