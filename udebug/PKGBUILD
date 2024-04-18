@@ -1,4 +1,5 @@
 pkgname=udebug
+pkgver=r25.6d3f51f
 pkgrel=1
 pkgdesc="OpenWrt debugging helper library/service"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')

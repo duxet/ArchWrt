@@ -1,4 +1,5 @@
 pkgname=ucode
+pkgver=r834.cfe137b
 pkgrel=1
 pkgdesc="OpenWrt debugging helper library/service"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')

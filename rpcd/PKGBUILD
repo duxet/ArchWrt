@@ -1,7 +1,7 @@
 pkgname=rpcd
 pkgver=r231.8ef4c25
 pkgrel=1
-pkgdesc="OpenWrt rpc"
+pkgdesc="OpenWrt ubus RPC daemon"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://openwrt.org"
 depends=('ubox' 'ubus' 'uci' 'json-c' 'libxcrypt')

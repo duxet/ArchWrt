@@ -1,6 +1,7 @@
 pkgname=libubox
+pkgver=r529.eb9bcb6
 pkgrel=1
-pkgdesc="Utility for the Unified Configuration Interface (UCI)"
+pkgdesc="C utility functions for OpenWrt"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://openwrt.org"
 depends=('lua51')

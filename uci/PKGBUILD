@@ -1,4 +1,5 @@
 pkgname=uci
+pkgver=r566.5781664
 pkgrel=1
 pkgdesc="Utility for the Unified Configuration Interface (UCI)"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')

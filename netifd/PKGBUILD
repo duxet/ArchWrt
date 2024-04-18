@@ -29,7 +29,7 @@ build() {
     cmake -B build -S "$pkgname" \
         -DCMAKE_BUILD_TYPE='None' \
         -DCMAKE_C_COMPILER=gcc \
-        -DCMAKE_INCLUDE_PATH=/usr/include/libnl-tiny \
+        # -DCMAKE_INCLUDE_PATH=/usr/include/libnl-tiny \
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -Wno-dev
     cmake --build build

@@ -1,7 +1,7 @@
 pkgname=luci
 pkgver=r17197.f630156
 pkgrel=1
-pkgdesc="LUCI"
+pkgdesc="OpenWrt Lua Configuration Interface"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://openwrt.org"
 depends=('iwinfo' 'libnl' 'libxcrypt' 'lua51' 'rpcd')
