@@ -1,0 +1,13 @@
+diff --git a/modules/luci-mod-status/htdocs/luci-static/resources/view/status/index.js b/modules/luci-mod-status/htdocs/luci-static/resources/view/status/index.js
+index da08ec12c2..80f8022310 100644
+--- a/modules/luci-mod-status/htdocs/luci-static/resources/view/status/index.js
++++ b/modules/luci-mod-status/htdocs/luci-static/resources/view/status/index.js
+@@ -63,7 +63,7 @@ function startPolling(includes, containers) {
+ 
+ return view.extend({
+ 	load: function() {
+-		return L.resolveDefault(fs.list('/www' + L.resource('view/status/include')), []).then(function(entries) {
++		return L.resolveDefault(fs.list(L.env.documentroot + L.resource('view/status/include')), []).then(function(entries) {
+ 			return Promise.all(entries.filter(function(e) {
+ 				return (e.type == 'file' && e.name.match(/\.js$/));
+ 			}).map(function(e) {

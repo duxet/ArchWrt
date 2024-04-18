@@ -11,8 +11,9 @@ source=(
     'git+https://git.openwrt.org/project/luci.git'
     'git+https://github.com/jow-/lucihttp.git'
     'fix-rpcd-mod-luci-build.patch'
+    'fix-status-custom-document-root.patch'
 )
-sha256sums=("SKIP" "SKIP" "SKIP")
+sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 
 pkgver() {
   cd "$pkgname"
@@ -29,12 +30,12 @@ build() {
 
     cd luci
     patch -Np1  -i $srcdir/fix-rpcd-mod-luci-build.patch
+    patch -Np1  -i $srcdir/fix-status-custom-document-root.patch
     cd ..
 
     cmake -B rpcd-mod-luci-build -S "luci/libs/rpcd-mod-luci/src" \
         -DCMAKE_BUILD_TYPE='None' \
         -DCMAKE_INSTALL_PREFIX='/usr' \
-        -DBUILD_TESTS=false \
         -Wno-dev
     cmake --build rpcd-mod-luci-build
 
