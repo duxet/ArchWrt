@@ -34,5 +34,8 @@ package() {
     mkdir -p $pkgdir/usr/include
     cp -r rpcd/include/* $pkgdir/usr/include
 
+    mkdir -p $pkgdir/usr/share/rpcd/acl.d
+    cp rpcd/unauthenticated.json $pkgdir/usr/share/rpcd/acl.d
+
     install -Dm644 rpcd.service "$pkgdir"/usr/lib/systemd/system/rpcd.service
 }
