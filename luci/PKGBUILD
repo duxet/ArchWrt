@@ -25,6 +25,7 @@ build() {
         -DCMAKE_BUILD_TYPE='None' \
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -DBUILD_TESTS=false \
+        -DLUAPATH="/usr/lib/lua/5.1" \
         -Wno-dev
     cmake --build lucihttp-build
 
