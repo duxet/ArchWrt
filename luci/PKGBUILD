@@ -100,6 +100,11 @@ package() {
     cp -r modules/luci-mod-system/htdocs/* $pkgdir/srv/http
     cp -r modules/luci-mod-system/root/usr/share/* $pkgdir/usr/share
 
+    cp -r protocols/luci-proto-ipv6/htdocs/* $pkgdir/srv/http
+    cp -r protocols/luci-proto-ppp/htdocs/* $pkgdir/srv/http
+    cp -r protocols/luci-proto-wireguard/htdocs/* $pkgdir/srv/http
+    cp -r protocols/luci-proto-wireguard/root/usr/share/* $pkgdir/usr/share
+
     cp -r themes/luci-theme-bootstrap/htdocs/* $pkgdir/srv/http
     cp -r themes/luci-theme-bootstrap/ucode/* $pkgdir/usr/share/ucode/luci
 }
