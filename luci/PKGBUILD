@@ -46,6 +46,9 @@ build() {
     make version.uc lib/luci.o lib/lmo.o lib/plural_formula.o
     gcc -shared -o core.so lib/luci.o lib/lmo.o lib/plural_formula.o -lcrypt
 
+    cd $srcdir/luci/modules/luci-mod-status/src
+    make compile
+
     cd $srcdir/luci/modules/luci-lua-runtime/src
     CPPFLAGS="-I/usr/include/lua5.1" make compile
 }
@@ -61,6 +64,10 @@ package() {
     cd ../../..
 
     cd modules/luci-lua-runtime/src
+    DESTDIR="$pkgdir" make install
+    cd ../../..
+
+    cd modules/luci-mod-status/src
     DESTDIR="$pkgdir" make install
     cd ../../..
 
