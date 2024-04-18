@@ -17,6 +17,7 @@ build() {
     cd iwinfo
     # TODO: Add backends and CLI tool
     #BACKENDS="nl80211"
+    sed -i 's/-llua/-llua5.1/g' Makefile
     CFLAGS="-fPIC -I/usr/include/lua5.1 -I/usr/include/libnl3" make libiwinfo.so iwinfo.so
 }
 
