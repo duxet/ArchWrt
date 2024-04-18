@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenWrt process management daemon
+
+[Service]
+ExecStart=/usr/bin/procd
+
+[Install]
+WantedBy=multi-user.target

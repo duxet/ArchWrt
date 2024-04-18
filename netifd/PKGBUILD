@@ -10,8 +10,9 @@ makedepends=('cmake')
 source=(
     'git+https://git.openwrt.org/project/netifd.git'
     'remove-debug.patch'
+    'netifd.service'
 )
-sha256sums=("SKIP" "SKIP")
+sha256sums=("SKIP" "SKIP" "SKIP")
 
 pkgver() {
   cd "$pkgname"
@@ -37,4 +38,6 @@ build() {
 package() {
     DESTDIR="$pkgdir" cmake --install build
     mv $pkgdir/usr/sbin $pkgdir/usr/bin
+
+    install -Dm644 netifd.service "$pkgdir"/usr/lib/systemd/system/netifd.service
 }

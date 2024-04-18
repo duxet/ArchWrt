@@ -1,0 +1,8 @@
+[Unit]
+Description=OpenWrt network interface management daemon
+
+[Service]
+ExecStart=/usr/bin/netifd
+
+[Install]
+WantedBy=multi-user.target

@@ -1,13 +1,3 @@
 # Work in progress
 
-OpenWrt components as Arch packages.
-
-## Post install
-change nginx configuration
-
-run:
-```sh
-systemctl enable --now logd.service
-systemctl enable --now ubus.socket
-systemctl enable --now rpcd.service
-```
+OpenWrt components as Arch packages. Maybe one day you'll be able to use it for your x86 router.

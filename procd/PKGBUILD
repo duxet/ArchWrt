@@ -7,8 +7,11 @@ url="https://openwrt.org"
 depends=('ubox' 'ubus' 'uci' 'udebug' 'json-c')
 makedepends=('cmake')
 
-source=('git+https://github.com/openwrt/procd.git')
-sha256sums=("SKIP")
+source=(
+    'git+https://github.com/openwrt/procd.git'
+    'procd.service'
+)
+sha256sums=("SKIP" "SKIP")
 
 pkgver() {
   cd "$pkgname"
@@ -27,4 +30,6 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
     mv $pkgdir/usr/sbin $pkgdir/usr/bin
     rm $pkgdir/usr/bin/init
+
+    install -Dm644 procd.service "$pkgdir"/usr/lib/systemd/system/procd.service
 }
