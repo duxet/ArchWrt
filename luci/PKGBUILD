@@ -64,12 +64,16 @@ package() {
     DESTDIR="$pkgdir" make install
     cd ../../..
 
+    mkdir -p $pkgdir/usr/lib/lua/luci
+    mkdir -p $pkgdir/srv/http
+
+    cp -r applications/luci-app-firewall/htdocs/* $pkgdir/srv/http
+    cp -r applications/luci-app-firewall/root/usr/share/* $pkgdir/usr/share
+
     cp contrib/package/ucode-mod-html/html.so $pkgdir/usr/lib/ucode
 
-    mkdir -p $pkgdir/usr/lib/lua/luci
     cp -r libs/luci-lib-base/luasrc/* $pkgdir/usr/lib/lua/luci
 
-    mkdir -p $pkgdir/srv/http
     cp -r modules/luci-base/htdocs/* $pkgdir/srv/http
     cp -r modules/luci-base/root/usr/share/* $pkgdir/usr/share
     cp -r modules/luci-base/ucode/* $pkgdir/usr/share/ucode/luci
